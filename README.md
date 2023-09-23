@@ -17,6 +17,14 @@ Honestly, I'm still figuring things out. But I do hope to add a few more scraper
 
 If you're curious or have some friendly tips, feel free to drop a message or a suggestion. Always happy to learn and chat! 😄
 
+## Concepts
+
+### RAG
+
+RAG, or Retrieval-Augmented Generation, serves as an innovative AI framework designed to extract factual information from an external knowledge base. This framework is essential for grounding large language models (LLMs) in the most accurate and current information available on specific subjects. By doing so, it ensures that the generated content is not only relevant but also reliable and well-informed.
+
+![rag.png](rag.png)
+
 ## Installation
 
 First clone the repository to your local machine.

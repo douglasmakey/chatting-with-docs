@@ -179,3 +179,4 @@ pyrightconfig.json
 /docs/
 .DS_Store
 .vscode/
+.idea/

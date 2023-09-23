@@ -1,16 +1,15 @@
 import argparse
-import sys
 import runpy
-
-from dotenv import load_dotenv
+import sys
 
 import chromadb
-
+from dotenv import load_dotenv
 from langchain.embeddings import HuggingFaceBgeEmbeddings
-from app import ChromaDB
+
+from core.app import ChromaDB
+from core.config import DEVICE
 from scrapers.aws_faqs import AWSFAQScraper
 from scrapers.bg3 import BG3Scraper
-from utils import get_device
 
 
 def scrape(s_args: argparse.Namespace) -> None:
@@ -54,7 +53,7 @@ def feed(f_args: argparse.Namespace) -> None:
             - collection_name: A string representing the name of the collection to store the PDF data in.
     """
     print(f'Feeding ChromaDB with data from {f_args.from_path} directory')
-    model_kwargs = {'device':  get_device()}
+    model_kwargs = {'device':  DEVICE}
     encode_kwargs = {'normalize_embeddings': True, "show_progress_bar": True}
     embedding = HuggingFaceBgeEmbeddings(
         model_name="BAAI/bge-base-en",
@@ -79,7 +78,7 @@ def app(_args: argparse.Namespace) -> None:
     """
     This function sets the command line arguments and runs the Streamlit app.
     """
-    sys.argv = ["streamlit", "run", "app.py"]
+    sys.argv = ["streamlit", "run", "core/app.py"]
     runpy.run_module("streamlit", run_name="__main__")
 
 

@@ -1,11 +1,11 @@
 from typing import List
-import chromadb
 
-from langchain.vectorstores import Chroma
-from langchain.document_loaders import DirectoryLoader, TextLoader, PyPDFium2Loader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document, BaseRetriever
+import chromadb
+from langchain.document_loaders import DirectoryLoader, TextLoader, PyPDFium2Loader, UnstructuredMarkdownLoader
 from langchain.embeddings.base import Embeddings
+from langchain.schema import Document, BaseRetriever
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
 
 
 class ChromaDB:
@@ -57,7 +57,7 @@ class ChromaDB:
         documents = loader.load()
         return documents
 
-    def load_text(self, path: str) -> List[Document]:
+    def load_texts(self, path: str) -> List[Document]:
         """
         Load text documents from a given directory path.
 
@@ -68,6 +68,21 @@ class ChromaDB:
             list: A list of loaded text documents.
         """
         loader = DirectoryLoader(path, glob="./*.txt", loader_cls=TextLoader)
+        documents = loader.load()
+        return documents
+
+    def load_mds(self, path: str) -> List[Document]:
+        """
+        Load text documents from a given directory path.
+
+        Args:
+            path (str): The path to the directory containing the text documents.
+
+        Returns:
+            list: A list of loaded text documents.
+        """
+        loader = DirectoryLoader(path, glob="./*.md",
+                                 loader_cls=UnstructuredMarkdownLoader)
         documents = loader.load()
         return documents
 
@@ -109,7 +124,7 @@ class ChromaDB:
         if data_type == "pdf":
             docs = self.load_pdfs(path)
         elif data_type == "txt":
-            docs = self.load_text(path)
+            docs = self.load_texts(path)
         else:
             raise ValueError("Invalid data type")
 
