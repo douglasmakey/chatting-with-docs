@@ -48,7 +48,24 @@ def instance_chroma_client():
 @st.cache_resource
 def instance_chain(
         _llm, _embedding, _chroma_cli, _prompt_template, llm_model_name, collection, prompt_name, k) -> BaseRetrievalQA:
+    """
+    Instantiates a RetrievalQA object with the specified parameters.
 
+    The Args llm_model_name, collection, prompt_name and k are used to create hash for the cache.
+
+    Args:
+        _llm (LanguageModel): The language model to use for generating responses.
+        _embedding (str): The path to the sentence embedding model.
+        _chroma_cli (str): The path to the Chroma CLI executable.
+        _prompt_template (Optional[str]): The template to use for generating prompts.
+        llm_model_name (str): The name of the language model to use.
+        collection (str): The name of the collection to use for retrieval.
+        prompt_name (str): The name of the prompt to use for retrieval.
+        k (int): The number of documents to retrieve.
+
+    Returns:
+        RetrievalQA: A RetrievalQA object with the specified parameters.
+    """
     print(
         f"Instance OpenAI model: {_llm.model_name} with the collection: {collection} and prompt: {prompt_name}")
 
@@ -59,10 +76,12 @@ def instance_chain(
     return RetrievalQA.from_chain_type(
         llm=st.session_state['llm'],
         chain_type="stuff",
-        retriever=ChromaDB(_embedding, _chroma_cli, collection).get_retriever(k=k),
+        retriever=ChromaDB(_embedding, _chroma_cli,
+                           collection).get_retriever(k=k),
         chain_type_kwargs=chain_type_kwargs,
         return_source_documents=True
     )
+
 
 class App:
     """
@@ -89,7 +108,8 @@ class App:
         if 'retrieval_qa' not in st.session_state:
             st.session_state['retrieval_qa'] = None
 
-        st.session_state["llm"] = ChatOpenAI(model_name=self.default_model_name)
+        st.session_state["llm"] = ChatOpenAI(
+            model_name=self.default_model_name)
         st.session_state['prompt_template_name'] = "default"
 
     def sidebar(self) -> None:
@@ -174,7 +194,6 @@ class App:
                 "documents and get accurate answers while you can play with the prompt to get better results."
                 "\n\n SimpleGPT: Use OpenAI's chat GPT models and BAAI/bge-base-en as embedding model."
             )
-
 
     def qa_tab(self) -> None:
         """
